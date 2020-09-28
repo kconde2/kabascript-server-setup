@@ -1,0 +1,1 @@
+netdata_dir: "{{ server_base_path }}/netdata"

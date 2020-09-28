@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  netdata:
+    image: netdata/netdata
+    container_name: "{{ project_name }}_netdata"
+    # hostname: ${HOSTNAME} # set to fqdn of host ss
+    networks:
+      - ot_network
+    # ports:
+    #  - 19999:19999
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
+    volumes:
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.netdata.rule=Host("netdata.{{ app_domain }}")
+      - traefik.http.routers.netdata.tls.certresolver=leresolver
+      - traefik.http.routers.netdata.entrypoints=websecure
+      # Authentication
+      - traefik.http.routers.netdata.middlewares=traefik-auth
+
+networks:
+  ot_network:
+    external: true

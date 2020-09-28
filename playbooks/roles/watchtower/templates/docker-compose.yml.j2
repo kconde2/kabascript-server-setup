@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  watchtower:
+    image: containrrr/watchtower
+    restart: unless-stopped
+    command: --cleanup --interval 30000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      WATCHTOWER_NOTIFICATIONS: email
+      WATCHTOWER_NOTIFICATION_EMAIL_FROM: fromaddress@gmail.com
+      WATCHTOWER_NOTIFICATION_EMAIL_TO: "{{ watchtower_notification_email_to }}"
+      WATCHTOWER_NOTIFICATION_EMAIL_SERVER: "{{ watchtower_notification_server }}"
+      WATCHTOWER_NOTIFICATION_EMAIL_SERVER_USER: "{{ watchtower_notification_server_user }}"
+      WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PASSWORD: "{{ watchtower_notification_server_password }}"
+      WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PORT: 587
+      WATCHTOWER_NOTIFICATION_EMAIL_DELAY: 2
+  {#
+    # SMTP needed to send out status emails
+    postfix:
+      image: freinet/postfix-relay:latest
+      expose:
+        - 25
+      environment:
+        MAILNAME: somename.your-domain.com
+        TLS_KEY: "/etc/ssl/domains/your-domain.com/your-domain.com.key"
+        TLS_CRT: "/etc/ssl/domains/your-domain.com/your-domain.com.crt"
+        TLS_CA: "/etc/ssl/domains/your-domain.com/intermediate.crt"
+      volumes:
+        - /etc/ssl/domains/your-domain.com/:/etc/ssl/domains/your-domain.com/:ro
+      networks:
+        watchtower:
+          # this alias is really important to make your certificate work
+          aliases:
+            - smtp.your-domain.com
+  networks:
+    watchtower:
+      external: false #}

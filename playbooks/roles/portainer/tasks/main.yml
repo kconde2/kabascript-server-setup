@@ -1,0 +1,24 @@
+---
+  - name: Ensures portainer dir exists
+    file:
+      path: "{{ portainer_dir }}"
+      state: directory
+
+  - name: Creating portainer docker-compose.yml file
+    template:
+      src: docker-compose.yml.j2
+      dest: "{{ portainer_dir }}/docker-compose.yml"
+
+  - name: Tear down existing services
+    docker_compose:
+      project_src: "{{ portainer_dir }}"
+      state: absent
+
+  - name: Create and start portainer
+    docker_compose:
+      project_src: "{{ portainer_dir }}"
+    # register: portainer_output
+
+  # - name: Print create and start portainer
+  #   debug:
+  #     var: portainer_output

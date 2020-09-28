@@ -1,0 +1,5 @@
+traefik_dir: "{{ server_base_path }}/traefik"
+traefik_acme_email: your-email@gmail.com
+traefik_api_user: user
+traefik_api_password: password
+traefik_auth: "{{ traefik_api_user }}:{{ traefik_api_password | docker_composer_password_hash }}"

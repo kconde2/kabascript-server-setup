@@ -1,0 +1,11 @@
+vault_users:
+  - name: "{{ admin_user }}"
+    password: deployer
+    salt: "generateme"
+  - name: "{{ web_user }}"
+    password: deployer
+    salt: "generateme"
+
+vault_watchtower:
+  user: contact@ouestech.com
+  password: ouestech

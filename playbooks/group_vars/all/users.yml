@@ -1,0 +1,28 @@
+admin_user: cognitus
+admin_group: cognitus
+
+web_user: deployer
+web_group: deployer
+
+# Also define 'vault_users' (`group_vars/staging/vault.yml`, `group_vars/production/vault.yml`)
+users:
+  - name: "{{ web_user }}"
+    groups:
+      - "{{ web_group }}"
+      - sudo
+      - docker
+    keys:
+      - "{{ lookup('file', '~/.ssh/ouestech_deploy.pub') }}"
+    aliases:
+      - dc='docker-compose'
+
+  - name: "{{ admin_user }}"
+    groups:
+      - "{{ admin_group }}"
+      - sudo
+      - docker
+    keys:
+      - "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+    aliases:
+      - dc='docker-compose'
+    # TODO: make that when aliases is not defined it can work so putting this here temporarily

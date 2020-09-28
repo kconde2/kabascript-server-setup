@@ -1,0 +1,30 @@
+---
+- import_playbook: variable-check.yml
+  vars:
+    playbook: provision.yml
+
+- name: Test Connection and Determine Remote User
+  hosts: "{{ env }}"
+  gather_facts: false
+  roles:
+    - { role: connection, tags: [connection, always] }
+
+- name: Provisionning "{{ env }}" group
+  hosts: "{{ env }}"
+  become: yes
+  vars_files:
+    - vars-overrides.yml
+  roles:
+    - { role: common, tags: [init, common] }
+    - { role: users, tags: [init, users] }
+    - { role: ssh, tags: [init, ssh] }
+    - { role: network-basics, tags: [init, network-basics] }
+    - { role: docker, tags: [reverse-proxy, docker] }
+    - { role: traefik, tags: [reverse-proxy, traefik] }
+    - { role: mysql, tags: [db, mysql] }
+    - { role: phpmyadmin, tags: [db, pma] }
+    - { role: down, tags: [down] }
+    - { role: portainer, tags: [portainer] }
+    - { role: netdata, tags: [netdata] }
+    - { role: watchtower, tags: [watchtower] }
+    - { role: gotenberg, tags: [gotenberg] }

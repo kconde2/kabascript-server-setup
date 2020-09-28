@@ -1,0 +1,3 @@
+# and in 'vault_users' (`group_vars/staging/vault.yml`, `group_vars/production/vault.yml`)
+sshd_permit_root_login: false
+sshd_password_authentication: false

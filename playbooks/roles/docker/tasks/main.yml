@@ -1,0 +1,49 @@
+---
+- name: Install packages to allow apt to use a repository over HTTPS
+  apt:
+    pkg: "{{ item }}"
+    state: present
+  loop:
+    - apt-transport-https
+    - ca-certificates
+    - software-properties-common
+    - curl
+    - python3-pip
+    #- python-pip
+    - python3-setuptools
+    - virtualenv
+
+- name: Add GPG key for Docker
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add the Docker repository to the apt sources list
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+
+# !important : https://github.com/ansible/ansible/issues/37958#issuecomment-376320961
+- name: Install Docker for tyh
+  apt:
+    name: docker-ce
+    state: present
+    update_cache: yes
+  notify:
+    - start docker
+
+# will also install docker
+- name: Install Docker-compose Module for Python
+  pip:
+    name: docker-compose>=1.7.0
+
+- name: Install Docker Compose
+  apt:
+    name: docker-compose
+    state: present
+    update_cache: yes
+
+- name: Add the default users to the docker group
+  user:
+    name: "{{ item.name }}"
+    group: docker
+  with_items: "{{ users }}"

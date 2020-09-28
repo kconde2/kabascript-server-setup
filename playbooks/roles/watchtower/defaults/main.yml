@@ -1,0 +1,6 @@
+watchtower_dir: "{{ server_base_path }}/watchtower"
+watchtower_notifications: email
+watchtower_notification_email_to: kabaconde15@gmail.com
+watchtower_notification_server_user: "{{ vault_watchtower.user }}"
+watchtower_notification_server_password: "{{ vault_watchtower.password }}"
+watchtower_notification_server_email: ""

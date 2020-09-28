@@ -1,0 +1,35 @@
+app_domain: ouestech.com
+project_name: ouestech
+
+traefik_acme_email: kabaconde15@gmail.com
+traefik_api_user:
+traefik_api_password:
+
+pma_user: ""
+pma_password: ""
+
+mysql_db_prefix:
+mysql_root_password: ""
+mysql_environments:
+  production:
+    - database: production
+      user:
+      password:
+  staging:
+    - database: staging
+      user:
+      password:
+
+fail2ban_destemail:
+fail2ban_ignoreip: 90.120.239.179
+
+sendemail_smtp_server: smtp.gmail.com
+sendemail_user:
+sendemail_password:
+sendemail_port: 587
+sendemail_from:
+sendemail_to: "firstname latname <email>"
+
+watchtower_notification_server: "smtp.gmail.com"
+watchtower_notification_server_user: "email@gmail.com"
+watchtower_notification_server_password: ""

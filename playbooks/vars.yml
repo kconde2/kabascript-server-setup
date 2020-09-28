@@ -1,0 +1,22 @@
+app_domain: domain.com
+project_name: project_name
+server_base_path: /var/www
+
+traefik_acme_email: kabaconde15@gmail.com
+traefik_api_user: traefik
+traefik_api_password: KabaConde590#
+
+pma_user: "SimpleUserButNotForAnyOne543"
+pma_password: "IUsedToKeepThisSimple562#"
+
+mysql_db_prefix: exam224
+mysql_root_password: root
+mysql_environments:
+  production:
+    - database: production
+      user: user
+      password: password
+  staging:
+    - database: staging
+      user: user
+      password: password

@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  gotenberg:
+    image: thecodingmachine/gotenberg:6
+    container_name: "{{ project_name }}_gotenberg"
+    networks:
+      - ot_network
+      - ot_staging_network
+    # ports:
+    #   - 3000:3000
+
+networks:
+  ot_network:
+    external: true
+  ot_staging_network:
+    external: true

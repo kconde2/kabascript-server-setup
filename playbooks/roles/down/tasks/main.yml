@@ -1,0 +1,11 @@
+---
+- name: Clean all docker services
+  shell: |
+    docker stop $(docker ps -a -q)
+    docker rm $(docker ps -a -q)
+    docker rmi $(docker images -q) -f
+  register: docker_clean
+
+- name: "Show clean all docker services"
+  debug:
+    msg: "{{ docker_clean.stdout }}"

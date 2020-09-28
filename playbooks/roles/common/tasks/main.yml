@@ -1,0 +1,30 @@
+---
+- name: Update and upgrade apt packages
+  become: true
+  apt:
+    upgrade: 'yes'
+    update_cache: yes
+    cache_valid_time: 86400 #One day
+
+- name: Install git
+  apt:
+    name: git
+    state: present
+    update_cache: yes
+
+# ignore ansible connection
+# - name: Install sendemail and ssl extensions
+#   apt:
+#     pkg: "{{ item }}"
+#     state: present
+#   loop:
+#     - sendemail
+#     - libio-socket-ssl-perl
+#     - libio-socket-ssl-perl
+
+# - name: Create /etc/ssh/sshrc ssh login notification config with sendemail and gmail
+#   template:
+#     src: sshrc.j2
+#     dest: "/etc/ssh/sshrc"
+#   tags:
+#      - ssh_notify

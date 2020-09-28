@@ -1,0 +1,56 @@
+---
+- name: Ensures traefik dir exists
+  file:
+    path: "{{ traefik_dir }}"
+    state: directory
+
+- name: Ensures {{ traefik_dir }}/letsencrypt dir exists
+  file:
+    path: "{{ traefik_dir }}/letsencrypt"
+    state: directory
+
+- name: Ensures "{{ traefik_dir }}/letsencrypt/acme.json" file exists
+  file:
+    path: "{{ traefik_dir }}/letsencrypt/acme.json"
+    state: touch
+    mode: "0600"
+
+- name: Creating traefik docker-compose.yml file
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ traefik_dir }}/docker-compose.yml"
+
+- name: Creating traefik config file
+  template:
+    src: traefik_conf.yml.j2
+    dest: "{{ traefik_dir }}/traefik_conf.yml"
+
+- name: Create the traefk networks
+  docker_network:
+    name: "{{ item }}"
+  loop:
+    - ot_network
+    - ot_staging_network
+
+- name: Tear down existing services
+  docker_compose:
+    project_src: "{{ traefik_dir }}"
+    state: absent
+
+- name: Create and start traefik
+  docker_compose:
+    project_src: "{{ traefik_dir }}"
+    restarted: yes
+  register: traefik_output
+
+# - name: Print create and start traefik
+#   debug:
+#     var: traefik_output
+
+- name: Create web root
+  file:
+    path: "{{ www_root }}"
+    owner: "{{ web_user }}"
+    group: "{{ web_group }}"
+    mode: "0755"
+    state: directory

@@ -1,0 +1,24 @@
+---
+  - name: Ensures gotenberg dir exists
+    file:
+      path: "{{ gotenberg_dir }}"
+      state: directory
+
+  - name: Creating gotenberg docker-compose.yml file
+    template:
+      src: docker-compose.yml.j2
+      dest: "{{ gotenberg_dir }}/docker-compose.yml"
+
+  - name: Tear down existing services
+    docker_compose:
+      project_src: "{{ gotenberg_dir }}"
+      state: absent
+
+  - name: Create and start gotenberg
+    docker_compose:
+      project_src: "{{ gotenberg_dir }}"
+    # register: gotenberg_output
+
+  # - name: Print create and start gotenberg
+  #   debug:
+  #     var: gotenberg_output

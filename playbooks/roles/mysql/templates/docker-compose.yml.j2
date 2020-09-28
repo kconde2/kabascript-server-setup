@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8
+    restart: always
+    container_name: "{{ project_name }}_mysql"
+    volumes:
+      - ./docker/mysql/db-data:/var/lib/mysql
+      - ./data:/data
+      - ./script/sql:/docker-entrypoint-initdb.d
+    networks:
+      - ot_network
+      - ot_staging_network
+    command:
+      - "--default-authentication-plugin=mysql_native_password"
+      - "--lower_case_table_names=1"
+    environment:
+      - MYSQL_ROOT_PASSWORD={{ mysql_root_password }}
+
+networks:
+  ot_network:
+    external: true
+  ot_staging_network:
+    external: true

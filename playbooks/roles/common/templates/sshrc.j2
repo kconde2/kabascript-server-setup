@@ -1,0 +1,11 @@
+ip=`echo $SSH_CONNECTION | cut -d " " -f 1`
+
+logger -t ssh-wrapper $USER login from $ip
+sendemail -q -f {{ gmail_from }} \
+          -s {{ gmail_smtp_server }}:{{ gmail_port }} \
+          -o tls=yes \
+          -xu {{ gmail_user }} \
+          -xp {{ gmail_password }} \
+          -t "{{ gmail_to }}" \
+          -u "SSH Login" -f "Originator <contact@exam224.com>" \
+          -m "User $USER just logged in from $ip"

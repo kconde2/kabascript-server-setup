@@ -1,0 +1,24 @@
+---
+  - name: Ensures watchtower dir exists
+    file:
+      path: "{{ watchtower_dir }}"
+      state: directory
+
+  - name: Creating watchtower docker-compose.yml file
+    template:
+      src: docker-compose.yml.j2
+      dest: "{{ watchtower_dir }}/docker-compose.yml"
+
+  - name: Tear down existing services
+    docker_compose:
+      project_src: "{{ watchtower_dir }}"
+      state: absent
+
+  - name: Create and start watchtower
+    docker_compose:
+      project_src: "{{ watchtower_dir }}"
+    # register: watchtower_output
+
+  # - name: Print create and start watchtower
+  #   debug:
+  #     var: watchtower_output
