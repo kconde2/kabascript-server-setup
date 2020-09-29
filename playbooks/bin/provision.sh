@@ -29,7 +29,8 @@ done
 ENV="$1"; shift
 EXTRA_PARAMS=$@
 DEPLOY_CMD="docker-compose exec ansible ansible-playbook provision.yml -e env=$ENV $EXTRA_PARAMS --flush-cache"
-HOSTS_FILE="inventory.ini"
+PARENT_PATH=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+HOSTS_FILE="$PARENT_PATH/../inventory.ini"
 
 if [[ ! -e $HOSTS_FILE ]]; then
   echo "Error: $ENV is not a valid environment ($HOSTS_FILE does not exist)."
