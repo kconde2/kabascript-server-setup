@@ -10,4 +10,4 @@ bash:
 	docker-compose exec ansible bash
 restart: down up
 provision:
-	docker-compose exec ansible ansible-playbook provision.yml -e env=server --tags="init, reverse-proxy, db, netdata" -v
+	docker-compose exec ansible ansible-playbook provision.yml -e env=server --tags="init, reverse-proxy, db, netdata, portainer" -v

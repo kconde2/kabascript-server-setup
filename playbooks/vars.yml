@@ -16,7 +16,7 @@ mysql_environments:
     - database: production
       user: user
       password: password
-  staging:
-    - database: staging
+  uat:
+    - database: uat
       user: user
       password: password

@@ -1,12 +1,12 @@
 #!/bin/bash
 shopt -s nullglob
 
-ENVIRONMENTS=(staging production)
+ENVIRONMENTS=(uat production)
 
 show_usage() {
   echo "Usage: provision <environment> <site name> [options]
 
-<environment> is the environment to deploy to ("staging", "production", etc)
+<environment> is the environment to deploy to ("uat", "production", etc)
 [options] is any number of parameters that will be passed to ansible-playbook
 
 Available environments:
@@ -15,7 +15,7 @@ Available environments:
 Examples:
   provision server
   provision production
-  provision staging -vv -T 60
+  provision uat -vv -T 60
 "
 }
 
@@ -29,7 +29,8 @@ done
 ENV="$1"; shift
 EXTRA_PARAMS=$@
 DEPLOY_CMD="docker-compose exec ansible ansible-playbook provision.yml -e env=$ENV $EXTRA_PARAMS --flush-cache"
-HOSTS_FILE="inventory.ini"
+PARENT_PATH=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+HOSTS_FILE="$PARENT_PATH/../inventory.ini"
 
 if [[ ! -e $HOSTS_FILE ]]; then
   echo "Error: $ENV is not a valid environment ($HOSTS_FILE does not exist)."

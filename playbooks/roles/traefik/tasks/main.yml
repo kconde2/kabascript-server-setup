@@ -30,7 +30,7 @@
     name: "{{ item }}"
   loop:
     - ot_network
-    - ot_staging_network
+    - ot_uat_network
 
 - name: Tear down existing services
   docker_compose:
