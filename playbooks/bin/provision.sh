@@ -1,12 +1,12 @@
 #!/bin/bash
 shopt -s nullglob
 
-ENVIRONMENTS=(staging production)
+ENVIRONMENTS=(uat production)
 
 show_usage() {
   echo "Usage: provision <environment> <site name> [options]
 
-<environment> is the environment to deploy to ("staging", "production", etc)
+<environment> is the environment to deploy to ("uat", "production", etc)
 [options] is any number of parameters that will be passed to ansible-playbook
 
 Available environments:
@@ -15,7 +15,7 @@ Available environments:
 Examples:
   provision server
   provision production
-  provision staging -vv -T 60
+  provision uat -vv -T 60
 "
 }
 
