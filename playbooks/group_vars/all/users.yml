@@ -3,8 +3,9 @@ admin_group: cognitus
 
 web_user: deployer
 web_group: deployer
+web_key: ouestech_deploy.pub
 
-# Also define 'vault_users' (`group_vars/staging/vault.yml`, `group_vars/production/vault.yml`)
+# Also define 'vault_users' (`group_vars/uat/vault.yml`, `group_vars/production/vault.yml`)
 users:
   - name: "{{ web_user }}"
     groups:
@@ -12,7 +13,7 @@ users:
       - sudo
       - docker
     keys:
-      - "{{ lookup('file', '~/.ssh/ouestech_deploy.pub') }}"
+      - "{{ lookup('file', '~/.ssh/' + web_key) }}"
     aliases:
       - dc='docker-compose'
 

@@ -1,5 +1,6 @@
-app_domain: ouestech.com
 project_name: ouestech
+app_domain: ouestech.com
+web_key: "{{ project_name }}_deploy.pub"
 
 traefik_acme_email: kabaconde15@gmail.com
 traefik_api_user:
@@ -15,8 +16,8 @@ mysql_environments:
     - database: production
       user:
       password:
-  staging:
-    - database: staging
+  uat:
+    - database: uat
       user:
       password:
 

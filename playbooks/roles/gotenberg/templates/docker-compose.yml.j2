@@ -6,12 +6,12 @@ services:
     container_name: "{{ project_name }}_gotenberg"
     networks:
       - ot_network
-      - ot_staging_network
+      - ot_uat_network
     # ports:
     #   - 3000:3000
 
 networks:
   ot_network:
     external: true
-  ot_staging_network:
+  ot_uat_network:
     external: true
