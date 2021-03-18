@@ -1,0 +1,38 @@
+---
+- name: Ensures swarmpit dir exists
+  file:
+    path: "{{ swarmpit_dir }}"
+    state: directory
+
+- name: Creating swarmpit swarmpit.yml file
+  template:
+    src: swarmpit.yml.j2
+    dest: "{{ swarmpit_dir }}/swarmpit.yml"
+
+- name: Import tasks from get_swarm_manager_node_info.yml
+  include_tasks:
+    file: get_swarm_manager_node_info.yml
+
+- name: Set swarmpit label to the same node and uses the existing volume
+  shell: "docker node update --label-add swarmpit.db-data=true {{ manager_node_id }}"
+
+- name: Set influx label to the same node and uses the existing volume
+  shell: "docker node update --label-add swarmpit.influx-data=true {{ manager_node_id }}"
+
+- name: Deploy swarmpit
+  docker_stack:
+    state: present
+    name: "swarmpit"
+    compose:
+      - "{{ swarmpit_dir }}/swarmpit.yml"
+  register: swarmpit_output
+
+- name: Print create and start swarmpit
+  debug:
+    var: swarmpit_output
+
+    # register: swarmpit_output
+
+  # - name: Print create and start swarmpit
+  #   debug:
+  #     var: swarmpit_output

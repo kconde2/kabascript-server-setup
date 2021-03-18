@@ -1,0 +1,16 @@
+- name: Get info on host if it is Swarm Manager
+  docker_node_info:
+    self: true
+  register: swarm_manager_node_result
+  tags:
+    - hostname
+
+# - name: Print create and start traefik
+#   debug:
+#     var: swarm_manager_node_result.nodes[0].ID
+#   tags:
+#     - hostname
+
+- name: Get manager NODE ID
+  set_fact:
+    manager_node_id: "{{ swarm_manager_node_result.nodes[0].ID }}"

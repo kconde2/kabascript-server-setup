@@ -19,12 +19,13 @@
     - { role: users, tags: [init, users] }
     - { role: ssh, tags: [init, ssh] }
     - { role: network-basics, tags: [init, network-basics] }
-    - { role: docker, tags: [reverse-proxy, docker] }
-    - { role: traefik, tags: [reverse-proxy, traefik] }
+    - { role: docker, tags: [init, reverse-proxy, docker] }
+    - { role: swarm, tags: [swarm, reverse-proxy] }
+    - { role: traefik, tags: [traefik, reverse-proxy] }
+    - { role: swarmpit, tags: [swarmpit] }
     - { role: mysql, tags: [db, mysql] }
     - { role: phpmyadmin, tags: [db, pma] }
     - { role: down, tags: [down] }
     - { role: portainer, tags: [portainer] }
-    - { role: netdata, tags: [netdata] }
     - { role: watchtower, tags: [watchtower] }
     - { role: gotenberg, tags: [gotenberg] }

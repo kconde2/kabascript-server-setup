@@ -9,34 +9,39 @@
     path: "{{ mysql_dir }}/script/sql"
     state: directory
 
-- name: Creating mysql docker-compose.yml file
-  template:
-    src: docker-compose.yml.j2
-    dest: "{{ mysql_dir }}/docker-compose.yml"
-
 - name: Creating sql files
   template:
     src: db.sql.j2
     dest: "{{ mysql_dir }}/script/sql/db.sql"
     mode: "0755"
 
-- name: Tear down existing services
-  docker_compose:
-    project_src: "{{ mysql_dir }}"
-    state: absent
+- name: Creating mysql mysql.yml file
+  template:
+    src: mysql.yml.j2
+    dest: "{{ mysql_dir }}/mysql.yml"
+
+- name: Import tasks from get_swarm_manager_node_info.yml
+  include_tasks:
+    file: get_swarm_manager_node_info.yml
+
+- name: node mysql
+  shell: "docker node update --label-add mysql.mysql-data=true {{ manager_node_id }}"
 
 - name: Create and start mysql
-  docker_compose:
-    project_src: "{{ mysql_dir }}"
+  docker_stack:
+    state: present
+    name: "mysql"
+    compose:
+      - "{{ mysql_dir }}/mysql.yml"
   register: mysql_output
 
 - name: Wait for mysql container
   retries: 10
   delay: 5
-  shell: docker logs {{ project_name }}_mysql 2>&1 | grep "ready for connections"
+  shell: docker service logs mysql_mysql 2>&1 | grep "ready for connections"
   register: mysql_output
   until: '"ready for connections" in mysql_output.stdout'
 
-# - name: "Show wait for mysql container"
-#   debug:
-#     msg: "{{ mysql_output.stdout.split('\n') }}"
+- name: "Show wait for mysql container"
+  debug:
+    msg: "{{ mysql_output.stdout.split('\n') }}"

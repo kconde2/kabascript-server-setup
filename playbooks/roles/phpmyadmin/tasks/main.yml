@@ -4,21 +4,19 @@
     path: "{{ pma_dir }}"
     state: directory
 
-- name: Creating phpmyadmin docker-compose.yml file
+- name: Creating phpmyadmin pma.yml file
   template:
-    src: docker-compose.yml.j2
-    dest: "{{ pma_dir }}/docker-compose.yml"
+    src: pma.yml.j2
+    dest: "{{ pma_dir }}/pma.yml"
 
-- name: Tear down existing services
-  docker_compose:
-    project_src: "{{ pma_dir }}"
-    state: absent
+- name: Deploy pma
+  docker_stack:
+    state: present
+    name: "pma"
+    compose:
+      - "{{ pma_dir }}/pma.yml"
+  register: phpmyadmin_output
 
-- name: Create and start phpmyadmin
-  docker_compose:
-    project_src: "{{ pma_dir }}"
-  # register: phpmyadmin_output
-
-# - name: Print create and start phpmyadmin
-#   debug:
-#     var: phpmyadmin_output
+- name: Print create and start phpmyadmin
+  debug:
+    var: phpmyadmin_output

@@ -1,0 +1,1 @@
+swarmpit_dir: "{{ server_base_path }}/swarmpit"
