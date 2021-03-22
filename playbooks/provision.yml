@@ -23,7 +23,6 @@
     - { role: swarm, tags: [swarm, reverse-proxy] }
     - { role: traefik, tags: [traefik, reverse-proxy] }
     - { role: swarmpit, tags: [swarmpit] }
-    - { role: mysql, tags: [db, mysql] }
     - { role: phpmyadmin, tags: [db, pma] }
     - { role: down, tags: [down] }
     - { role: portainer, tags: [portainer] }

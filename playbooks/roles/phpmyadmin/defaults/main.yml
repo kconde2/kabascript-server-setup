@@ -1,6 +1,4 @@
 pma_dir: "{{ server_base_path }}/phpmyadmin"
-pma_db_host: mysql
-pma_db_port: 3306
 pma_user: user
 pma_password: password
 pma_auth: "{{ pma_user }}:{{ pma_password | docker_composer_password_hash }}"

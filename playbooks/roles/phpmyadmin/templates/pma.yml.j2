@@ -4,8 +4,7 @@ services:
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     environment:
-      - PMA_HOST={{ pma_db_host }}
-      - PMA_PORT={{ pma_db_port }}
+      - PMA_ARBITRARY=1
       - UPLOAD_LIMIT=100M
     networks:
       - traefik-public
