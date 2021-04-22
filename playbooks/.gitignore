@@ -1,3 +1,4 @@
 inventory.ini
 vars-overrides.yml
+vars-overrides-*.yml
 .vault_pass

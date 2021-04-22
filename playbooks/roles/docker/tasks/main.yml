@@ -9,7 +9,6 @@
     - software-properties-common
     - curl
     - python3-pip
-    #- python-pip
     - python3-setuptools
     - virtualenv
 
@@ -31,16 +30,24 @@
   notify:
     - start docker
 
-# will also install docker
-- name: Install Docker-compose Module for Python
-  pip:
-    name: docker-compose>=1.7.0
-
 - name: Install Docker Compose
   apt:
     name: docker-compose
     state: present
-    update_cache: yes
+    update_cache: true
+
+# - name: Install docker and docker-compose module for Docker Swarm
+#   shell: pip3 install docker docker-compose
+
+# https://docs.ansible.com/ansible/latest/modules/pip_module.html
+- name: Ensure docker python module and jsondiff are installed
+  pip:
+    name:
+      - docker
+      # jsondiff and pyyaml are needed by the docker_stack module
+      - jsondiff
+      - pyyaml
+      - docker-compose
 
 - name: Add the default users to the docker group
   user:

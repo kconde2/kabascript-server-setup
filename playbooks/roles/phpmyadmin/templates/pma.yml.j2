@@ -1,0 +1,28 @@
+version: "3.7"
+
+services:
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      - PMA_ARBITRARY=1
+      - UPLOAD_LIMIT=100M
+    networks:
+      - traefik-public
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.http.routers.pma.rule=Host("pma.{{ app_domain }}")
+        - traefik.http.routers.pma.tls.certresolver=leresolver
+        - traefik.http.routers.pma.entrypoints=websecure
+        # Authentication
+        - "traefik.http.middlewares.pma_auth.basicauth.users={{ pma_auth }}"
+        - "traefik.http.routers.pma.middlewares=pma_auth"
+        - traefik.http.services.pma.loadbalancer.server.port=80
+
+networks:
+  traefik-public:
+    external: true

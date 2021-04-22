@@ -4,48 +4,55 @@
     path: "{{ traefik_dir }}"
     state: directory
 
-- name: Ensures {{ traefik_dir }}/letsencrypt dir exists
-  file:
-    path: "{{ traefik_dir }}/letsencrypt"
-    state: directory
-
-- name: Ensures "{{ traefik_dir }}/letsencrypt/acme.json" file exists
-  file:
-    path: "{{ traefik_dir }}/letsencrypt/acme.json"
-    state: touch
-    mode: "0600"
-
-- name: Creating traefik docker-compose.yml file
+- name: Creating traefik traefik.yml file
   template:
-    src: docker-compose.yml.j2
-    dest: "{{ traefik_dir }}/docker-compose.yml"
+    src: traefik.yml.j2
+    dest: "{{ traefik_dir }}/traefik.yml"
 
 - name: Creating traefik config file
   template:
     src: traefik_conf.yml.j2
     dest: "{{ traefik_dir }}/traefik_conf.yml"
 
-- name: Create the traefk networks
-  docker_network:
-    name: "{{ item }}"
-  loop:
-    - ot_network
-    - ot_uat_network
+- name: Create traefik network
+  shell: 'docker network create --driver=overlay traefik-public'
+  args:
+    chdir: "{{ traefik_dir }}"
+  ignore_errors: yes
 
-- name: Tear down existing services
-  docker_compose:
-    project_src: "{{ traefik_dir }}"
-    state: absent
+- name: Set up the server hostname
+  shell: |
+    echo $USE_HOSTNAME > /etc/hostname
+    hostname -F /etc/hostname
+  environment:
+    USE_HOSTNAME: "{{ app_domain }}"
 
-- name: Create and start traefik
-  docker_compose:
-    project_src: "{{ traefik_dir }}"
-    restarted: yes
+- name: Import tasks from get_swarm_manager_node_info.yml
+  include_tasks:
+    file: get_swarm_manager_node_info.yml
+
+- name: node traefik
+  shell: "docker node update --label-add traefik-public.traefik-public-certificates=true {{ manager_node_id }}"
+
+# - name: Add traefik label for master node
+#   docker_node:
+#     hostname: "{{ manager_node_id }}"
+#     labels:
+#       traefik-public.traefik-public-certificates: "true"
+#     labels_state: replace
+
+# https://docs.ansible.com/ansible/latest/modules/docker_stack_module.html
+- name: Deploy traefik
+  docker_stack:
+    state: present
+    name: "traefik"
+    compose:
+      - "{{ traefik_dir }}/traefik.yml"
   register: traefik_output
 
-# - name: Print create and start traefik
-#   debug:
-#     var: traefik_output
+- name: Print create and start traefik
+  debug:
+    var: traefik_output
 
 - name: Create web root
   file:

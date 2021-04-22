@@ -1,0 +1,4 @@
+---
+- name: Initialize the cluster using docker swarm
+  community.general.docker_swarm:
+    state: present

@@ -1,24 +1,45 @@
 ---
-  - name: Ensures portainer dir exists
-    file:
-      path: "{{ portainer_dir }}"
-      state: directory
+- name: Ensures portainer dir exists
+  file:
+    path: "{{ portainer_dir }}"
+    state: directory
 
-  - name: Creating portainer docker-compose.yml file
-    template:
-      src: docker-compose.yml.j2
-      dest: "{{ portainer_dir }}/docker-compose.yml"
+- name: Creating portainer portainer.yml file
+  template:
+    src: portainer.yml.j2
+    dest: "{{ portainer_dir }}/portainer.yml"
 
-  - name: Tear down existing services
-    docker_compose:
-      project_src: "{{ portainer_dir }}"
-      state: absent
+- name: Set up the server hostname
+  shell: |
+    echo $USE_HOSTNAME > /etc/hostname
+    hostname -F /etc/hostname
+  environment:
+    USE_HOSTNAME: "{{ app_domain }}"
 
-  - name: Create and start portainer
-    docker_compose:
-      project_src: "{{ portainer_dir }}"
-    # register: portainer_output
+- name: Import tasks from get_swarm_manager_node_info.yml
+  include_tasks:
+    file: get_swarm_manager_node_info.yml
 
-  # - name: Print create and start portainer
-  #   debug:
-  #     var: portainer_output
+- name: node portainer
+  shell: "docker node update --label-add portainer.portainer-data=true {{ manager_node_id }}"
+
+# https://docs.ansible.com/ansible/latest/modules/docker_stack_module.html
+- name: Deploy portainer
+  docker_stack:
+    state: present
+    name: "portainer"
+    compose:
+      - "{{ portainer_dir }}/portainer.yml"
+  register: portainer_output
+
+- name: Print create and start portainer
+  debug:
+    var: portainer_output
+
+- name: Create web root
+  file:
+    path: "{{ www_root }}"
+    owner: "{{ web_user }}"
+    group: "{{ web_group }}"
+    mode: "0755"
+    state: directory

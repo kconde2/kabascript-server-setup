@@ -57,3 +57,4 @@ docker-compose exec master ansible-playbook server.yml -e env=<environment>
 ## References
 
 - [Docker images Python Docker Images](https://pythonspeed.com/articles/base-image-python-docker-images/)
+- [Docker Swarm on AWS](https://www.seelk.co/blog/docker-swarm-on-aws-with-ansible/)
