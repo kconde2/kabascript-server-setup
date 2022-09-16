@@ -1,5 +1,6 @@
 admin_user: cognitus
 admin_group: cognitus
+admin_key: id_rsa.pub
 
 web_user: deployer
 web_group: deployer
@@ -23,7 +24,7 @@ users:
       - sudo
       - docker
     keys:
-      - "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+      - "{{ lookup('file', '~/.ssh/' + admin_key) }}"
     aliases:
       - dc='docker-compose'
     # TODO: make that when aliases is not defined it can work so putting this here temporarily
